@@ -1,0 +1,6 @@
+# Example targets file for: python controller/controller.py --targets-file targets.example.txt
+# One target per line:  host  ports      (or host:ports)
+# Only list machines you own or have permission to scan.
+127.0.0.1 1-1024          # the well-known ports on this computer
+127.0.0.1 3306,5432,8080  # a few specific ports
+# 192.168.56.10 22,80,443   # a VM of your own on a private network (remove the # to use it)

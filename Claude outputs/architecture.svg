@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 490" width="1040" height="490" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Architecture of the distributed port scanner</title>
+  <desc id="d">The controller splits a scan into tasks, puts them in a queue, and a thread per worker sends tasks to worker processes. Each worker runs Nmap on the target and returns only open ports. The controller merges the results.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+    <marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+    </marker>
+  </defs>
+  <rect width="1040" height="490" rx="14" fill="#fcfcfb"/>
+
+  <!-- Controller -->
+  <rect x="30" y="30" width="340" height="400" rx="12" fill="#eef4fc" stroke="#2a78d6" stroke-width="2"/>
+  <text x="200" y="64" text-anchor="middle" font-size="22" font-weight="600" fill="#0b0b0b">Controller</text>
+  <text x="200" y="86" text-anchor="middle" font-size="14" fill="#52514e">controller/controller.py</text>
+
+  <rect x="55" y="104" width="290" height="62" rx="8" fill="#fcfcfb" stroke="#52514e"/>
+  <text x="200" y="130" text-anchor="middle" font-size="16" font-weight="600" fill="#0b0b0b">1. Split the scan into tasks</text>
+  <text x="200" y="152" text-anchor="middle" font-size="14" fill="#52514e">e.g. ports 1-1000 → 8 tasks of 125 ports</text>
+
+  <line x1="200" y1="166" x2="200" y2="190" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="55" y="192" width="290" height="62" rx="8" fill="#fcfcfb" stroke="#52514e"/>
+  <text x="200" y="218" text-anchor="middle" font-size="16" font-weight="600" fill="#0b0b0b">2. Shared task queue</text>
+  <text x="200" y="240" text-anchor="middle" font-size="14" fill="#52514e">thread-safe, failed tasks are re-queued</text>
+
+  <line x1="200" y1="254" x2="200" y2="278" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="55" y="280" width="290" height="62" rx="8" fill="#fcfcfb" stroke="#52514e"/>
+  <text x="200" y="306" text-anchor="middle" font-size="16" font-weight="600" fill="#0b0b0b">3. One thread per worker</text>
+  <text x="200" y="328" text-anchor="middle" font-size="14" fill="#52514e">each thread hands out tasks, with a timeout</text>
+
+  <line x1="200" y1="342" x2="200" y2="366" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="55" y="368" width="290" height="46" rx="8" fill="#fcfcfb" stroke="#52514e"/>
+  <text x="200" y="397" text-anchor="middle" font-size="16" font-weight="600" fill="#0b0b0b">4. Merge → summary, JSON, HTML</text>
+
+  <!-- Workers -->
+  <g font-size="14" fill="#52514e">
+    <text x="495" y="76" text-anchor="middle">task (JSON line)</text>
+    <text x="495" y="130" text-anchor="middle">open ports only</text>
+    <text x="495" y="226" text-anchor="middle">task (JSON line)</text>
+    <text x="495" y="280" text-anchor="middle">open ports only</text>
+    <text x="495" y="376" text-anchor="middle">task (JSON line)</text>
+    <text x="495" y="430" text-anchor="middle">open ports only</text>
+  </g>
+  <g stroke-width="2">
+    <line x1="372" y1="88" x2="608" y2="88" stroke="#52514e" marker-end="url(#arr)"/>
+    <line x1="608" y1="108" x2="372" y2="108" stroke="#2a78d6" marker-end="url(#arrb)"/>
+    <line x1="372" y1="238" x2="608" y2="238" stroke="#52514e" marker-end="url(#arr)"/>
+    <line x1="608" y1="258" x2="372" y2="258" stroke="#2a78d6" marker-end="url(#arrb)"/>
+    <line x1="372" y1="388" x2="608" y2="388" stroke="#52514e" marker-end="url(#arr)"/>
+    <line x1="608" y1="408" x2="372" y2="408" stroke="#2a78d6" marker-end="url(#arrb)"/>
+  </g>
+
+  <g>
+    <rect x="610" y="50" width="200" height="80" rx="10" fill="#fdf1ec" stroke="#eb6834" stroke-width="2"/>
+    <text x="710" y="82" text-anchor="middle" font-size="18" font-weight="600" fill="#0b0b0b">worker-1</text>
+    <text x="710" y="106" text-anchor="middle" font-size="14" fill="#52514e">runs Nmap on its task</text>
+    <rect x="610" y="200" width="200" height="80" rx="10" fill="#fdf1ec" stroke="#eb6834" stroke-width="2"/>
+    <text x="710" y="232" text-anchor="middle" font-size="18" font-weight="600" fill="#0b0b0b">worker-2</text>
+    <text x="710" y="256" text-anchor="middle" font-size="14" fill="#52514e">runs Nmap on its task</text>
+    <rect x="610" y="350" width="200" height="80" rx="10" fill="#fdf1ec" stroke="#eb6834" stroke-width="2"/>
+    <text x="710" y="382" text-anchor="middle" font-size="18" font-weight="600" fill="#0b0b0b">worker-3</text>
+    <text x="710" y="406" text-anchor="middle" font-size="14" fill="#52514e">runs Nmap on its task</text>
+  </g>
+
+  <!-- Target -->
+  <line x1="812" y1="90" x2="868" y2="190" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="812" y1="240" x2="868" y2="240" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="812" y1="390" x2="868" y2="290" stroke="#52514e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="870" y="160" width="140" height="160" rx="10" fill="#fcfcfb" stroke="#52514e" stroke-width="2"/>
+  <text x="940" y="212" text-anchor="middle" font-size="18" font-weight="600" fill="#0b0b0b">Target</text>
+  <text x="940" y="238" text-anchor="middle" font-size="14" fill="#52514e">127.0.0.1 or</text>
+  <text x="940" y="258" text-anchor="middle" font-size="14" fill="#52514e">hosts you own</text>
+  <text x="940" y="284" text-anchor="middle" font-size="14" fill="#52514e">(TCP connect scan)</text>
+
+  <text x="520" y="470" text-anchor="middle" font-size="14" fill="#52514e">Messages: TCP, one JSON object per line. A crashed or silent worker only delays a task: it goes back in the queue.</text>
+</svg>

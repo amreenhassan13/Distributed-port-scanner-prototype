@@ -1,0 +1,6 @@
+# generated at run time
+results/
+__pycache__/
+*.pyc
+.venv/
+.vscode/
